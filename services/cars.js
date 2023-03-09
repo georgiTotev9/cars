@@ -5,6 +5,7 @@ const filePath = './services/data.json';
 async function read() {
     try {
         const file = await fs.readFile(filePath);
+        return JSON.parse(file);
     } catch (err) {
         console.error('Database read error');
         console.error(err);
@@ -30,8 +31,8 @@ async function getAll() {
 }
 
 module.exports = () => (req, res, next) => {
-    res.storage = {
-        getAll,
+    req.storage = {
+        getAll
     };
     next();
 };

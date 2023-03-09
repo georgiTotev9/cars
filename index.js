@@ -6,6 +6,7 @@
 // [ ] create data service
 // [ ] implement controllers
 
+const carService = require('./services/cars');
 const express = require('express');
 const hbs = require('express-handlebars');
 const { home } = require('./controllers/home');
@@ -26,6 +27,7 @@ app.set('view engine', 'hbs');
 
 app.use(express.urlencoded({ extended: true }));
 app.use('/static', express.static('static'));
+app.use(carService());
 
 app.get('/', home);
 app.get('/about', about);
