@@ -30,9 +30,19 @@ async function getAll() {
     );
 }
 
+async function getById(id) {
+    const data = await read();
+    const car = data[id];
+
+    if (!car) return undefined;
+
+    return Object.assign({}, { id }, car);
+}
+
 module.exports = () => (req, res, next) => {
     req.storage = {
-        getAll
+        getAll,
+        getById
     };
     next();
 };
