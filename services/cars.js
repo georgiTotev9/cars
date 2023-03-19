@@ -39,10 +39,30 @@ async function getById(id) {
     return Object.assign({}, { id }, car);
 }
 
+async function createCar(car) {
+    const cars = await read();
+
+    let id;
+
+    do {
+        id = nextId();
+    } while (car.hasOwnProperty(id));
+
+    cars[id] = car;
+
+    await write(cars);
+}
+
+function nextId() {
+    return 'xxxxxxxx-xxxx'.replace(/x/g, () =>
+        ((Math.random() * 16) | 0).toString(16)
+    );
+}
+
 module.exports = () => (req, res, next) => {
     req.storage = {
         getAll,
-        getById
+        getById,
     };
     next();
 };
