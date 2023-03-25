@@ -32,8 +32,7 @@ app.use(carService());
 app.get('/', home);
 app.get('/about', about);
 app.get('/details/:id', details);
-app.get('/create', create.get);
-app.post('/create', create.post);
+app.route('/create').get(create.get).post(create.post);
 
 app.all('*', notFound);
 app.listen(3000, () => console.log('Server started on port 3000.'));
