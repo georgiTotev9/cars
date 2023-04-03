@@ -1,6 +1,6 @@
 module.exports = {
     get(req, res) {
-        res.render('create');
+        res.render('create', { title: 'Create Listing' });
     },
     async post(req, res) {
         const car = {
@@ -11,6 +11,7 @@ module.exports = {
         };
 
         await req.storage.createCar(car);
+
         res.redirect('/');
-    },
+    }
 };

@@ -4,9 +4,9 @@ module.exports = {
         const car = await req.storage.getById(id);
 
         if (car) {
-            res.render('details', { title: `Carbicle - ${car.name}`, car});
+            res.render('details', { title: `Carbicle - ${car.name}`, car });
         } else {
             res.redirect('/404');
         }
-    },
+    }
 };

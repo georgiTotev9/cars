@@ -1,12 +1,12 @@
-document.getElementById('cars').addEventListener('click', (e) => {
-    if (e.target.classList.contains('more')) {
-        const desc = e.target.parentElement.querySelector('.description');
+document.getElementById('cars').addEventListener('click', ({target}) => {
+    if (target.classList.contains('more')) {
+        const desc = target.parentElement.querySelector('.description');
         if (desc.style.display == 'block') {
             desc.style.display = 'none';
-            e.target.textContent = 'Show More';
+            target.textContent = 'Show More';
         } else {
             desc.style.display = 'block';
-            e.target.textContent = 'Hide';
+            target.textContent = 'Hide';
         }
     }
 });
