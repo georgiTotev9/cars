@@ -1,72 +1,35 @@
-const fs = require('fs/promises');
+const Car = require('../models/Cars');
 
-const filePath = './services/data.json';
-
-async function read() {
-    try {
-        const file = await fs.readFile(filePath);
-        return JSON.parse(file);
-    } catch (err) {
-        console.error('Database read error');
-        console.error(err);
-        process.exit(1);
-    }
-}
-
-async function write(data) {
-    try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-    } catch (err) {
-        console.error('Database write error');
-        console.error(err);
-        process.exit(1);
-    }
+function carViewModel(car) {
+    return {
+        id: car._id,
+        name: car.name,
+        description: car.description,
+        imageUrl: car.imageUrl,
+        price: car.price,
+    };
 }
 
 async function getAll(query) {
-    const data = await read();
-    let cars = Object
-        .entries(data)
-        .map(([id, v]) => Object.assign({}, { id }, v));
+    const cars = await Car.find({}); //.lean();
 
-    if (query.search) {
-        cars = cars.filter(c => c.name.toLocaleLowerCase().includes(query.search.toLocaleLowerCase()));
-    }
-    if (query.from) {
-        cars = cars.filter(c => c.price >= Number(query.from));
-    }
-    if (query.to) {
-        cars = cars.filter(c => c.price <= Number(query.to));
-    }
-
-    return cars;
+    return cars.map(carViewModel);
 }
 
 async function getById(id) {
-    const data = await read();
-    const car = data[id];
+    const car = await Car.findById(id);
 
-    if (car) {
-        return Object.assign({}, { id }, car);
-    } else {
-        return undefined;
-    }
+    if (!car) return undefined;
+
+    return carViewModel(car);
 }
 
 async function createCar(car) {
-    const cars = await read();
+    const result = new Car(car);
+    await result.save();
 
-    let id;
-
-    do {
-        id = nextId();
-    } while (cars.hasOwnProperty(id));
-
-    cars[id] = car;
-
-    await write(cars);
+    // or await Car.create(car);
 }
-
 
 async function deleteById(id) {
     const data = await read();
@@ -91,7 +54,9 @@ async function updateById(id, car) {
 }
 
 function nextId() {
-    return 'xxxxxxxx-xxxx'.replace(/x/g, () => (Math.random() * 16 | 0).toString(16));
+    return 'xxxxxxxx-xxxx'.replace(/x/g, () =>
+        ((Math.random() * 16) | 0).toString(16)
+    );
 }
 
 module.exports = () => (req, res, next) => {
@@ -100,7 +65,7 @@ module.exports = () => (req, res, next) => {
         getById,
         createCar,
         updateById,
-        deleteById
+        deleteById,
     };
     next();
 };
