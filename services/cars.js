@@ -11,7 +11,22 @@ function carViewModel(car) {
 }
 
 async function getAll(query) {
-    const cars = await Car.find({}); //.lean();
+    let options = {};
+
+    if (query.search) {
+        options.name = new RegExp(query.search, 'i');
+    }
+    if (query.from) {
+        options.price = { $gte: Number(query.from) };
+    }
+    if (query.to) {
+        if (!options.price) {
+            options.price = {};
+        }
+        options.price.$lte = Number(query.to);
+    }
+
+    const cars = await Car.find(options); //.lean();
 
     return cars.map(carViewModel);
 }
@@ -32,31 +47,20 @@ async function createCar(car) {
 }
 
 async function deleteById(id) {
-    const data = await read();
-
-    if (data.hasOwnProperty(id)) {
-        delete data[id];
-        await write(data);
-    } else {
-        throw new ReferenceError('No such ID in database');
-    }
+    await Car.findByIdAndDelete(id);
 }
 
 async function updateById(id, car) {
-    const data = await read();
+    // await Car.findByIdAndUpdate(id, car)
 
-    if (data.hasOwnProperty(id)) {
-        data[id] = car;
-        await write(data);
-    } else {
-        throw new ReferenceError('No such ID in database');
-    }
-}
+    const existing = await Car.findById(id);
 
-function nextId() {
-    return 'xxxxxxxx-xxxx'.replace(/x/g, () =>
-        ((Math.random() * 16) | 0).toString(16)
-    );
+    existing.name = car.name;
+    existing.description = car.description;
+    existing.price = car.price;
+    existing.imageUrl = car.imageUrl;
+
+    await existing.save();
 }
 
 module.exports = () => (req, res, next) => {
