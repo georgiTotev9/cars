@@ -4,6 +4,7 @@ const hbs = require('express-handlebars');
 const initDb = require('./models');
 
 const carsService = require('./services/cars');
+const authService = require('./services/auth');
 
 const { home } = require('./controllers/home');
 const { about } = require('./controllers/about');
@@ -39,6 +40,7 @@ async function start() {
     app.use(express.urlencoded({ extended: true }));
     app.use('/static', express.static('static'));
     app.use(carsService());
+    app.use(authService());
 
     app.get('/', home);
     app.get('/about', about);

@@ -2,10 +2,19 @@ module.exports = {
     registerGet(req, res) {
         res.render('register', { title: 'Register' });
     },
-    registerPost(req, res) {
-        console.log(req.body);
+    async registerPost(req, res) {
+        if (req.body.username == '' || req.body.password == '')
+            return res.render('/register');
+        if (req.body.password != req.body.repeatPassword)
+            return res.render('/register');
 
-        res.redirect('/');
+        try {
+            await req.auth.register(req.body.username, req.body.password);
+            res.redirect('/');
+        } catch (err) {
+            console.error(err);
+            return res.render('/register');
+        }
     },
     loginGet(req, res) {
         res.render('login', { title: 'Login' });
