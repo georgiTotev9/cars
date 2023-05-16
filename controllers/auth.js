@@ -13,7 +13,7 @@ module.exports = {
             res.redirect('/');
         } catch (err) {
             console.error(err);
-            return res.render('/register');
+            return res.redirect('/register');
         }
     },
     loginGet(req, res) {
