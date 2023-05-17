@@ -18,7 +18,7 @@ const {
     loginPost,
     registerGet,
     registerPost,
-    logoutGet,
+    logout,
 } = require('./controllers/auth');
 
 const { notFound } = require('./controllers/notFound');
@@ -54,6 +54,7 @@ async function start() {
     app.get('/', home);
     app.get('/about', about);
     app.get('/details/:id', details);
+    app.get('/logout', logout);
 
     app.route('/create').get(create.get).post(create.post);
 

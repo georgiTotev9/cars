@@ -28,6 +28,10 @@ async function login(session, username, password) {
     throw new Error('Incorrect username or password!');
 }
 
+function logout(session) {
+    delete session.user;
+}
+
 module.exports = () => (req, res, next) => {
     if (req.session.user) {
         res.locals.user = req.session.user;
@@ -37,6 +41,7 @@ module.exports = () => (req, res, next) => {
     req.auth = {
         register: (...params) => register(req.session, ...params),
         login: (...params) => login(req.session, ...params),
+        logout: () => logout(req.session),
     };
 
     next();
