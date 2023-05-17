@@ -22,6 +22,7 @@ const {
 } = require('./controllers/auth');
 
 const { notFound } = require('./controllers/notFound');
+const { isLoggedIn } = require('./services/utils');
 
 start();
 
@@ -56,11 +57,17 @@ async function start() {
     app.get('/details/:id', details);
     app.get('/logout', logout);
 
-    app.route('/create').get(create.get).post(create.post);
+    app.route('/create')
+        .get(isLoggedIn(), create.get)
+        .post(isLoggedIn(), create.post);
 
-    app.route('/delete/:id').get(deleteCar.get).post(deleteCar.post);
+    app.route('/delete/:id')
+        .get(isLoggedIn(), deleteCar.get)
+        .post(isLoggedIn(), deleteCar.post);
 
-    app.route('/edit/:id').get(edit.get).post(edit.post);
+    app.route('/edit/:id')
+        .get(isLoggedIn(), edit.get)
+        .post(isLoggedIn(), edit.post);
 
     app.route('/register').get(registerGet).post(registerPost);
 
