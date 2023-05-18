@@ -7,6 +7,7 @@ function carViewModel(car) {
         description: car.description,
         imageUrl: car.imageUrl,
         price: car.price,
+        owner: car.owner,
     };
 }
 
@@ -46,14 +47,25 @@ async function createCar(car) {
     // or await Car.create(car);
 }
 
-async function deleteById(id) {
+async function deleteById(id, ownerId) {
+    const existing = await Car.findById(id);
+
+    if (existing.owner != ownerId) {
+        return false;
+    }
     await Car.findByIdAndDelete(id);
+
+    return true;
 }
 
-async function updateById(id, car) {
+async function updateById(id, car, ownerId) {
     // await Car.findByIdAndUpdate(id, car)
 
     const existing = await Car.findById(id);
+
+    if (existing.owner != ownerId) {
+        return false;
+    }
 
     existing.name = car.name;
     existing.description = car.description;
@@ -61,6 +73,8 @@ async function updateById(id, car) {
     existing.imageUrl = car.imageUrl;
 
     await existing.save();
+
+    return true;
 }
 
 module.exports = () => (req, res, next) => {
