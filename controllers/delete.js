@@ -21,8 +21,10 @@ module.exports = {
         const id = req.params.id;
 
         try {
-            await req.storage.deleteById(id, req.session.user.id);
-            res.redirect('/');
+            if (await req.storage.deleteById(id, req.session.user.id)) {
+                return res.redirect('/');
+            }
+            return res.redirect('/login');
         } catch (err) {
             res.redirect('/404');
         }
