@@ -70,7 +70,20 @@ async function start() {
         .get(isLoggedIn(), edit.get)
         .post(isLoggedIn(), edit.post);
 
-    app.route('/register').get(registerGet).post(registerPost);
+    app.route('/register')
+        .get(registerGet)
+        .post(
+            body('username')
+                .isLength({ min: 3 })
+                .withMessage('Username must be at least 3 characters long'),
+            body('password')
+                .isLength({ min: 5 })
+                .withMessage('Password must be at least 5 characters long'),
+            body('repeatPassword')
+                .custom((value, { req }) => value == req.body.password)
+                .withMessage('Passwords do not match'),
+            registerPost
+        );
 
     app.route('/login').get(loginGet).post(loginPost);
 
