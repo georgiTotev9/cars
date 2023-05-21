@@ -23,6 +23,7 @@ const {
 
 const { notFound } = require('./controllers/notFound');
 const { isLoggedIn } = require('./services/utils');
+const { body } = require('express-validator');
 
 start();
 

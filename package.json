@@ -11,6 +11,8 @@
     "express": "^4.17.2",
     "express-handlebars": "^6.0.2",
     "express-session": "^1.17.3",
-    "mongoose": "^7.0.3"
+    "express-validator": "^7.0.1",
+    "mongoose": "^7.0.3",
+    "validator": "^13.9.0"
   }
 }
