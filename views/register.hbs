@@ -1,6 +1,13 @@
 <h1>Register Form</h1>
 <div class="form">
     <form action="/register" method="POST">
+    {{#if errors}}
+    <div>
+        {{#each errors}}
+        <p>{{msg}}</p>
+        {{/each}}
+    </div>
+    {{/if}}
         <label for="username">Username</label>
         <input type="text" id="username" name="username">
 

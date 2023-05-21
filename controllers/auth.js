@@ -13,9 +13,9 @@ module.exports = {
             }
             await req.auth.register(req.body.username, req.body.password);
             res.redirect('/');
-        } catch (err) {
-            console.error(err);
-            return res.redirect('/register');
+        } catch (errors) {
+            console.error(errors);
+            return res.render('register', { title: 'Register', errors });
         }
     },
     loginGet(req, res) {
